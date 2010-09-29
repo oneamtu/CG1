@@ -1,7 +1,12 @@
 CC=g++
 EXECUTABLE=cg1
 
-all: demo1
+.PHONY: test
 
-demo1: demo1.cc
-	g++ demo1.cc -o demo1
+all: main test
+
+main: main.cpp
+	g++ main.cpp TriangleMesh.cpp -o cg1
+	
+test:
+	cg1 MIT_teapot.obj
