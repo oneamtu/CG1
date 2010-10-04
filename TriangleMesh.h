@@ -1,5 +1,5 @@
-#ifndef _TriangleMesh_DEFINED
-#define _TriangleMesh_DEFINED
+#ifndef _TRIANGLEMESH_H
+#define _TRIANGLEMESH_H
 
 #include <cmath>
 #include <vector>
@@ -7,10 +7,11 @@
 class TriangleMesh;
 
 #include "Geometry.h"
+#include "Image.h"
+#include "Vector.h"
+using namespace MyMath;
 
-
-
-class TriangleMesh 
+class TriangleMesh
 {
 
 private:
@@ -18,20 +19,22 @@ private:
 	vector <Triangle> _trig;
 	float _xmax, _xmin, _ymax, _ymin, _zmin, _zmax;
 
-public: 
+public:
 	TriangleMesh(char * filename) { loadFile(filename) ;};
 	TriangleMesh() {};
+
 	void loadFile(char * filename);
 
-	int trigNum() { return _trig.size() ;};
+	int trigNum() { return _trig.size() ;}
 
-	void getTriangleVertices(int i, Vector3f & v1, Vector3f & v2, Vector3f & v3)
-	{
-		v1 = _v[_trig[i]._vertex[0]]; 
-		v2 = _v[_trig[i]._vertex[1]]; 
-		v3 = _v[_trig[i]._vertex[2]]; 
+	void translate(Vector3f translation);
+
+	void getTriangleVertices(int i, Vector3f & v1, Vector3f & v2, Vector3f & v3) {
+		v1 = _v[_trig[i]._vertex[0]];
+		v2 = _v[_trig[i]._vertex[1]];
+		v3 = _v[_trig[i]._vertex[2]];
 	}
-			
+	const vector <Vector3f> * getVertices() const { return &_v;}
 };
 
 #endif //TriangleMesh_DEFINED

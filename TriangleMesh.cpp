@@ -5,10 +5,6 @@ using namespace std;
 #include <string.h>
 #include "TriangleMesh.h"
 
-
-int nRows = 640;
-int nCols = 480; 
-
 void TriangleMesh::loadFile(char * filename)
 {
 	ifstream f(filename);
@@ -31,10 +27,10 @@ void TriangleMesh::loadFile(char * filename)
 
 	while (!f.eof()) {
 		    f.getline(buf, sizeof(buf));
-		    sscanf(buf, "%s", header);  
+		    sscanf(buf, "%s", header);
 
 		    if (strcmp(header, "v") == 0) {
-			sscanf(buf, "%s %f %f %f", header, &x, &y, &z);  
+			sscanf(buf, "%s %f %f %f", header, &x, &y, &z);
 
 		//	x *= 1000; y *= 1000; z *= 1000;
 
@@ -53,7 +49,7 @@ void TriangleMesh::loadFile(char * filename)
 		    }
 		    else if (strcmp(header, "f") == 0) {
 			sscanf(buf, "%s %d %d %d", header, &v1, &v2, &v3);
-			
+
 			Triangle trig(v1-1, v2-1, v3-1);
 			_trig.push_back(trig);
 
@@ -63,16 +59,23 @@ void TriangleMesh::loadFile(char * filename)
 	_xmin = xmin; _ymin = ymin; _zmin = zmin;
 	_xmax = xmax; _ymax = ymax; _zmax = zmax;
 
-	float range; 
+	float range;
 	if (xmax-xmin > ymax-ymin) range = xmax-xmin;
 	else range = ymax-ymin;
 
 	for (int j = 0; j < 3; j++) av[j] /= _v.size();
 
-	for (int i = 0; i < _v.size(); i++) 
+	for (int i = 0; i < _v.size(); i++)
 	{
-		for (int j = 0; j < 3; j++) _v[i][j] = (_v[i][j]-av[j])/range*400;  
+		for (int j = 0; j < 3; j++) _v[i][j] = (_v[i][j]-av[j])/range*400;
 	}
 	cout << "Trig " << _trig.size() << " vertices " << _v.size() << endl;
 	f.close();
-};
+}
+
+void TriangleMesh::translate(MyMath::Vector3f translation) {
+	for (vector<MyMath::Vector3f>::iterator i = _v.begin();
+	           i != _v.end(); i++) {
+		*i += translation;
+	}
+}
