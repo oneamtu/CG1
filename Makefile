@@ -8,7 +8,7 @@ all: main
 
 main: main.cpp
 #	mkdir -p ${BIN_DIR}
-	${CC} main.cpp TriangleMesh.cpp Image.cpp -o cg1 -g
+	${CC} main.cpp TriangleMesh.cpp Image.cpp Geometry.cpp -o cg1 -g
 	
 test:
 	cg1 MIT_teapot.obj

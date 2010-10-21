@@ -26,12 +26,23 @@ public:
 
 class Triangle2Di {
 
+private:
 	Vector2i v1, v2, v3;
+	//barycentric constants
+	float f_231, f_312, f_123;
+
+	void computeBarycentricConstants();
+	float auxBarycentricFunction(Vector2i va, Vector2i vb, Vector2i v);
 
 public:
 	Triangle2Di(Vector2i v1, Vector2i v2, Vector2i v3) :
-		v1(v1), v2(v2), v3(v3) {
+		v1(v1), v2(v2), v3(v3),
+		f_231(0.0f), f_312(0.0f), f_123(0.0f){
 	}
+
+	bool contains(Vector2i p);
+
+	Vector3f getBarycentricCoordinatesForPoint(Vector2i p);
 
 	int topBound() {
 		return MyMath::max(v1[Y], v2[Y], v3[Y]);

@@ -38,8 +38,9 @@ class Image {
 
 public:
 
-    const static int height = 480;
+    const static int height = 640;
     const static int width = 640;
+    const static float upp = 2.0f/width;//units per pixel
     const static float fov = 0.524f;
 
 public:
@@ -49,6 +50,7 @@ public:
     Vector2i projectVertexIntoPixel(const Vector3f v);
     vector<Vector2i> projectTriangleIntoPixels(
     		Vector3f v1, Vector3f v2, Vector3f v3);
+    Vector2i convertFromProjectionPlaneToImage(Vector2f v);
     void projectVertices(const vector<Vector3f> * vertices);
     void projectTriangleMesh(TriangleMesh trig);
     bool containsPoint(Vector2i p);

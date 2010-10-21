@@ -23,28 +23,43 @@ Vector2f Image::projectVertexOntoPlane(Vector3f v) {
 Vector2i Image::projectVertexIntoPixel(Vector3f v) {
 
     Vector2f _vf = projectVertexOntoPlane(v);
-    int _x = (int) (_vf[X] * width);
-    int _y = (int) (_vf[Y] * height);
 
-    _x += (int) (width/2);
-    _y += (int) (height/2);
+    return convertFromProjectionPlaneToImage(_vf);
+}
 
-    //we flip the y because in the world system the y axis points up
-    //in the image in points down
-    _y = height - _y;
+Vector2i Image::convertFromProjectionPlaneToImage(Vector2f v) {
+	int _x = (int) (v[X] * width);
+	int _y = (int) (v[Y] * height);
 
-    return Vector2i(_x, _y);
+	_x += (int) (width/2);
+	_y += (int) (height/2);
+
+	//we flip the y because in the world system the y axis points up
+	//in the image in points down
+	_y = height - _y;
+
+	return Vector2i(_x, _y);
 }
 
 vector<Vector2i> Image::projectTriangleIntoPixels(
 		Vector3f v1, Vector3f v2, Vector3f v3) {
 
+	vector <Vector2i> _pixels;
+
 	Vector2i pv1 = projectVertexIntoPixel(v1);
 	Vector2i pv2 = projectVertexIntoPixel(v2);
 	Vector2i pv3 = projectVertexIntoPixel(v3);
 	Triangle2Di t(pv1, pv2, pv3);
-	Rectangle2Di r = t.getBoundingBox();
 
+	for (int i = t.leftBound(); i < t.rightBound(); i++) {
+		for (int j = t.bottomBound(); j < t.topBound(); j++) {
+			Vector2i point = Vector2i(i, j);
+			if (t.contains(point)) {
+				_pixels.push_back(point);
+			}
+		}
+	}
+	return _pixels;
 }
 
 void Image::projectVertices(const vector<Vector3f> * vertices) {
@@ -53,7 +68,7 @@ void Image::projectVertices(const vector<Vector3f> * vertices) {
            i != vertices->end(); i++) {
        Vector2i p = projectVertexIntoPixel(*i);
        if (this->containsPoint(p)) {
-    	   _image[p[X] + width * p[Y]] = Pixel(255, 255, 255);
+    	   addPixel(p);
        }
    }
 }
@@ -67,6 +82,7 @@ void Image::projectTriangleMesh(TriangleMesh trig) {
 		for (vector<Vector2i>::iterator j = pixels.begin(); j
 				!= pixels.end(); j++) {
 			if (this->containsPoint(*j)) {
+				cout<<j->getX()<<" "<<j->getY()<<endl;
 				this->addPixel(*j);
 			}
 		}

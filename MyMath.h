@@ -36,6 +36,25 @@ static int min(int x, int y, int z) {
 	return min(min(x, y), z);
 }
 
+static float max(float x, float y) {
+	if (x > y) return x;
+	return y;
+}
+
+static float min(float x, float y) {
+	if (x < y) return x;
+	return y;
+}
+
+static float max(float x, float y, float z) {
+	return max(max(x, y), z);
+}
+
+static float min(float x, float y, float z) {
+	return min(min(x, y), z);
+}
+
+
 }
 
 #endif //_MYMATH_H
