@@ -8,15 +8,13 @@
  *  some commonly used vectors (3f, 2f, 2i)
  */
 
-#ifndef _MYMATH_VECTOR_H
-#define _MYMATH_VECTOR_H
+#ifndef _VECTOR_H
+#define _VECTOR_H
 #include <assert.h>
 #include <iostream>
 #include <fstream>
 
 #include "Common.h"
-
-namespace MyMath {
 
 class Vector3f;
 
@@ -113,7 +111,9 @@ public:
 	Vector2i() : Vector() {
 	}
 
+	int getX() const { return _item[0]; }
+	int getY() const { return _item[1]; }
+
 };
 
-}
-#endif //MYMATH_VECTOR_H
+#endif //_VECTOR_H

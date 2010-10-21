@@ -5,11 +5,27 @@
 #include <vector>
 
 class TriangleMesh;
+class Triangle;
 
 #include "Geometry.h"
 #include "Image.h"
 #include "Vector.h"
 using namespace MyMath;
+
+class Triangle {
+friend class TriangleMesh;
+
+	int _vertex[3];
+public:
+
+    Triangle(int v1, int v2, int v3) {
+        _vertex[0] = v1;
+        _vertex[1] = v2;
+        _vertex[2] = v3;
+
+    }
+};
+
 
 class TriangleMesh
 {

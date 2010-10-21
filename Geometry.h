@@ -7,26 +7,55 @@
 #include <assert.h>
 #include "Vector.h"
 #include "Common.h"
-
-class Triangle;
+#include "MyMath.h"
 
 enum Axis {
     X = 0, Y = 1, Z = 2
 };
 
-class Triangle {
-friend class TriangleMesh;
+class Rectangle2Di {
 
-	int _vertex[3];
+	Vector2i tl, tr, br, bl;
+
 public:
+	Rectangle2Di(int t, int r, int b, int l) :
+		tl(t, l), tr(t, r), bl(b, l), br(b, r) {
+	}
 
-    Triangle(int v1, int v2, int v3) {
-        _vertex[0] = v1;
-        _vertex[1] = v2;
-        _vertex[2] = v3;
-
-    }
 };
+
+class Triangle2Di {
+
+	Vector2i v1, v2, v3;
+
+public:
+	Triangle2Di(Vector2i v1, Vector2i v2, Vector2i v3) :
+		v1(v1), v2(v2), v3(v3) {
+	}
+
+	int topBound() {
+		return MyMath::max(v1[Y], v2[Y], v3[Y]);
+	}
+
+	int bottomBound() {
+		return MyMath::min(v1[Y], v2[Y], v3[Y]);
+	}
+
+	int rightBound() {
+		return MyMath::max(v1[X], v2[X], v3[X]);
+	}
+
+	int leftBound() {
+		return MyMath::min(v1[X], v2[X], v3[X]);
+	}
+
+	Rectangle2Di getBoundingBox() {
+		return Rectangle2Di(topBound(), rightBound(),
+				bottomBound(), leftBound());
+	}
+};
+
+
 /*
 class Vector2i {
 

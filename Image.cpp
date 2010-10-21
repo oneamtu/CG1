@@ -8,9 +8,10 @@
 #include <stdlib.h>
 
 #include "Image.h"
+#include "MyMath.h"
 
 
-MyMath::Vector2f Image::projectVertexOntoPlane(Vector3f v) {
+Vector2f Image::projectVertexOntoPlane(Vector3f v) {
 
     float _ratio = focalLength / v[Z];
     float _x = _ratio * v[X];
@@ -19,7 +20,7 @@ MyMath::Vector2f Image::projectVertexOntoPlane(Vector3f v) {
 }
 
 
-MyMath::Vector2i Image::projectVertexIntoPixel(Vector3f v) {
+Vector2i Image::projectVertexIntoPixel(Vector3f v) {
 
     Vector2f _vf = projectVertexOntoPlane(v);
     int _x = (int) (_vf[X] * width);
@@ -28,12 +29,27 @@ MyMath::Vector2i Image::projectVertexIntoPixel(Vector3f v) {
     _x += (int) (width/2);
     _y += (int) (height/2);
 
+    //we flip the y because in the world system the y axis points up
+    //in the image in points down
+    _y = height - _y;
+
     return Vector2i(_x, _y);
 }
 
-void Image::projectVertices(const vector<MyMath::Vector3f> * vertices) {
+vector<Vector2i> Image::projectTriangleIntoPixels(
+		Vector3f v1, Vector3f v2, Vector3f v3) {
 
-   for (vector<MyMath::Vector3f>::const_iterator i = vertices->begin();
+	Vector2i pv1 = projectVertexIntoPixel(v1);
+	Vector2i pv2 = projectVertexIntoPixel(v2);
+	Vector2i pv3 = projectVertexIntoPixel(v3);
+	Triangle2Di t(pv1, pv2, pv3);
+	Rectangle2Di r = t.getBoundingBox();
+
+}
+
+void Image::projectVertices(const vector<Vector3f> * vertices) {
+
+   for (vector<Vector3f>::const_iterator i = vertices->begin();
            i != vertices->end(); i++) {
        Vector2i p = projectVertexIntoPixel(*i);
        if (this->containsPoint(p)) {
@@ -42,7 +58,27 @@ void Image::projectVertices(const vector<MyMath::Vector3f> * vertices) {
    }
 }
 
-bool Image::containsPoint(MyMath::Vector2i p) {
+void Image::projectTriangleMesh(TriangleMesh trig) {
+
+	for (int i = 0; i < trig.trigNum(); i++ ) {
+		Vector3f v1, v2, v3;
+		trig.getTriangleVertices(i, v1, v2, v3);
+		vector<Vector2i> pixels = projectTriangleIntoPixels(v1, v2, v3);
+		for (vector<Vector2i>::iterator j = pixels.begin(); j
+				!= pixels.end(); j++) {
+			if (this->containsPoint(*j)) {
+				this->addPixel(*j);
+			}
+		}
+	}
+}
+
+void Image::addPixel(Vector2i p) {
+	_image[p[X] + width * p[Y]] = Pixel(255, 255, 255);
+}
+
+
+bool Image::containsPoint(Vector2i p) {
 	if (p[X] >= 0 && p[X] < width &&
 			p[Y] >=0 && p[Y] < height) {
 		return true;
@@ -54,7 +90,7 @@ void Image::output(const char * filename) {
 
     ofstream f(filename, ios::out);
     if (f == NULL) {
-        cerr << " Failed reading polygon data file " << filename << endl;
+        cerr << " Failed to create/open output file " << filename << endl;
         exit(1);
     }
     f<<"P3"<<endl;

@@ -18,6 +18,7 @@ class Pixel;
 #include "Geometry.h"
 #include "Math.h"
 #include "Vector.h"
+#include "TriangleMesh.h"
 
 using namespace MyMath;
 
@@ -46,8 +47,12 @@ public:
 
     Vector2f projectVertexOntoPlane(const Vector3f v);
     Vector2i projectVertexIntoPixel(const Vector3f v);
+    vector<Vector2i> projectTriangleIntoPixels(
+    		Vector3f v1, Vector3f v2, Vector3f v3);
     void projectVertices(const vector<Vector3f> * vertices);
-    bool containsPoint(const Vector2i p);
+    void projectTriangleMesh(TriangleMesh trig);
+    bool containsPoint(Vector2i p);
+    void addPixel(Vector2i p);
 
     void output(const char * filename);
 

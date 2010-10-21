@@ -73,8 +73,8 @@ void TriangleMesh::loadFile(char * filename)
 	f.close();
 }
 
-void TriangleMesh::translate(MyMath::Vector3f translation) {
-	for (vector<MyMath::Vector3f>::iterator i = _v.begin();
+void TriangleMesh::translate(Vector3f translation) {
+	for (vector<Vector3f>::iterator i = _v.begin();
 	           i != _v.end(); i++) {
 		*i += translation;
 	}
