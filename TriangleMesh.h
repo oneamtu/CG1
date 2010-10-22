@@ -12,18 +12,31 @@ class Triangle;
 #include "Vector.h"
 using namespace MyMath;
 
+enum Shading{
+	FLAT = 0,
+	GOURAUD = 1,
+	PHONG = 2
+};
+
 class Triangle {
 friend class TriangleMesh;
 
-	int _vertex[3];
+private:
+	const TriangleMesh* _parent;
+	Vector3f _normal;
+	int _v1,_v2,_v3;
 public:
 
-    Triangle(int v1, int v2, int v3) {
-        _vertex[0] = v1;
-        _vertex[1] = v2;
-        _vertex[2] = v3;
-
+    Triangle(int v1, int v2, int v3, const TriangleMesh* parent) {
+        _v1 = v1;
+        _v2 = v2;
+        _v3 = v3;
+        _parent = parent;
+        computeNormal();
     }
+
+    void computeNormal();
+    void computeColor();
 };
 
 
@@ -34,10 +47,11 @@ private:
 	vector <Vector3f> _v;
 	vector <Triangle> _trig;
 	float _xmax, _xmin, _ymax, _ymin, _zmin, _zmax;
+	Shading _shading;
 
 public:
-	TriangleMesh(char * filename) { loadFile(filename) ;};
-	TriangleMesh() {};
+	TriangleMesh(char * filename) : _shading(FLAT){ loadFile(filename);}
+	TriangleMesh() {}
 
 	void loadFile(char * filename);
 
@@ -46,10 +60,13 @@ public:
 	void translate(Vector3f translation);
 
 	void getTriangleVertices(int i, Vector3f & v1, Vector3f & v2, Vector3f & v3) {
-		v1 = _v[_trig[i]._vertex[0]];
-		v2 = _v[_trig[i]._vertex[1]];
-		v3 = _v[_trig[i]._vertex[2]];
+		v1 = _v[_trig[i]._v1];
+		v2 = _v[_trig[i]._v2];
+		v3 = _v[_trig[i]._v3];
 	}
+
+	Vector3f getVertex(int i) const {return _v[i];}
+
 	const vector <Vector3f> * getVertices() const { return &_v;}
 };
 

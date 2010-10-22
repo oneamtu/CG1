@@ -46,16 +46,23 @@ public:
 		}
 	}
 
-	Vector & operator =(Vector & obj) {
+	Vector & operator =(const Vector & obj) {
 			for (int i = 0; i < N; i++) {
-				_item[i] = obj[i];
+				_item[i] = obj.getElementAt(i);
 			}
 			return *this;
 		}
 
-	Vector & operator +=(Vector & obj) {
+	Vector & operator +=(const Vector & obj) {
 		for (int i = 0; i < N; i++) {
-			_item[i] += obj[i];
+			_item[i] += obj.getElementAt(i);
+		}
+		return *this;
+	}
+
+	Vector & operator -=(const Vector & obj) {
+		for (int i = 0; i < N; i++) {
+			_item[i] -= obj.getElementAt(i);
 		}
 		return *this;
 	}
@@ -64,6 +71,10 @@ public:
 		for (int i = 0; i < N; i++) {
 			stream << _item[i] << ' ';
 		}
+	}
+
+	const T getElementAt(int i) const {
+		return _item[i];
 	}
 };
 
@@ -82,6 +93,12 @@ public:
 	}
 
 	Vector3f() : Vector(){
+	}
+
+	static Vector3f crossProduct(Vector v1, Vector3f v2) {
+		return Vector3f(v1[1]*v2[2]-v1[2]*v2[1],
+				v1[2]*v2[0]-v1[0]*v2[2],
+				v1[0]*v2[1]-v1[1]*v2[0]);
 	}
 
 };

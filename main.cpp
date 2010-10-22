@@ -14,10 +14,11 @@ int main(int argc, char **argv)
 		Image i;
 		trig.translate(Vector3f(0.0f, 0.0f, 2000.0f));
 		cout<<"Projecting vertices ..."<<endl;
-		i.projectVertices(trig.getVertices());
 		i.projectTriangleMesh(trig);
+		//i.projectVertices(trig.getVertices());
 		cout<<"Creating ppm file ..."<<endl;
 		i.output("image.ppm");
+		//i.clear();
 
 	}
 	else {

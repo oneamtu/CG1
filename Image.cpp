@@ -68,7 +68,7 @@ void Image::projectVertices(const vector<Vector3f> * vertices) {
            i != vertices->end(); i++) {
        Vector2i p = projectVertexIntoPixel(*i);
        if (this->containsPoint(p)) {
-    	   addPixel(p);
+    	   addPixel(p, Color(255,255,255));
        }
    }
 }
@@ -82,15 +82,14 @@ void Image::projectTriangleMesh(TriangleMesh trig) {
 		for (vector<Vector2i>::iterator j = pixels.begin(); j
 				!= pixels.end(); j++) {
 			if (this->containsPoint(*j)) {
-				cout<<j->getX()<<" "<<j->getY()<<endl;
-				this->addPixel(*j);
+				this->addPixel((*j), Color(255,255,0));
 			}
 		}
 	}
 }
 
-void Image::addPixel(Vector2i p) {
-	_image[p[X] + width * p[Y]] = Pixel(255, 255, 255);
+void Image::addPixel(Vector2i p, Color c) {
+	_image[p[X] + width * p[Y]] = c;
 }
 
 

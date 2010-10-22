@@ -5,6 +5,21 @@ using namespace std;
 #include <string.h>
 #include "TriangleMesh.h"
 
+void Triangle::computeNormal() {
+	Vector3f v1 = _parent->getVertex(_v1);
+	Vector3f v2 = _parent->getVertex(_v2);
+	Vector3f v3 = _parent->getVertex(_v3);
+
+	v2 -= v1;
+	v3 -= v1;
+
+	_normal = Vector3f::crossProduct(v2, v3);
+}
+
+void Triangle::computeColor() {
+
+}
+
 void TriangleMesh::loadFile(char * filename)
 {
 	ifstream f(filename);
@@ -50,7 +65,7 @@ void TriangleMesh::loadFile(char * filename)
 		    else if (strcmp(header, "f") == 0) {
 			sscanf(buf, "%s %d %d %d", header, &v1, &v2, &v3);
 
-			Triangle trig(v1-1, v2-1, v3-1);
+			Triangle trig(v1-1, v2-1, v3-1, this);
 			_trig.push_back(trig);
 
 		    }

@@ -13,7 +13,7 @@
 #include <fstream>
 
 class Image;
-class Pixel;
+class Color;
 
 #include "Geometry.h"
 #include "Math.h"
@@ -22,16 +22,20 @@ class Pixel;
 
 using namespace MyMath;
 
-class Pixel {
-friend class Image;
-    byte red, green, blue;
+class Color {
+	friend class Image;
+private:
+	byte red, green, blue;
 public:
-    Pixel() : red(0), green(0), blue(0){}
-    Pixel(byte r, byte g, byte b): red(r), green(g), blue(b){}
-    ostream & operator<< (ostream & stream)
-    {
-        stream << red << ' ' << green << ' ' << blue << ' ';
-    }
+	Color() :
+		red(0), green(0), blue(0) {
+	}
+	Color(byte r, byte g, byte b) :
+		red(r), green(g), blue(b) {
+	}
+	ostream & operator<<(ostream & stream) {
+		stream << red << ' ' << green << ' ' << blue << ' ';
+	}
 };
 
 class Image {
@@ -54,15 +58,15 @@ public:
     void projectVertices(const vector<Vector3f> * vertices);
     void projectTriangleMesh(TriangleMesh trig);
     bool containsPoint(Vector2i p);
-    void addPixel(Vector2i p);
+    void addPixel(Vector2i p, Color c);
 
     void output(const char * filename);
 
-    const Pixel* getImageArray() const;
+    const Color* getImageArray() const;
 
 
 private:
-    Pixel _image[height * width];
+    Color _image[height * width];
     float focalLength;
 
 };
@@ -70,6 +74,6 @@ private:
 /*
  * Image getters
  */
-inline const Pixel* Image::getImageArray() const { return _image; }
+inline const Color* Image::getImageArray() const { return _image; }
 
 #endif /* IMAGE_H_ */
