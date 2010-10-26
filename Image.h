@@ -13,30 +13,14 @@
 #include <fstream>
 
 class Image;
-class Color;
 
+#include "Color.h"
 #include "Geometry.h"
 #include "Math.h"
 #include "Vector.h"
 #include "TriangleMesh.h"
 
 using namespace MyMath;
-
-class Color {
-	friend class Image;
-private:
-	byte red, green, blue;
-public:
-	Color() :
-		red(0), green(0), blue(0) {
-	}
-	Color(byte r, byte g, byte b) :
-		red(r), green(g), blue(b) {
-	}
-	ostream & operator<<(ostream & stream) {
-		stream << red << ' ' << green << ' ' << blue << ' ';
-	}
-};
 
 class Image {
 

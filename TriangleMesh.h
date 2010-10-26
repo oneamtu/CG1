@@ -8,8 +8,9 @@ class TriangleMesh;
 class Triangle;
 
 #include "Geometry.h"
-#include "Image.h"
+#include "Color.h"
 #include "Vector.h"
+#include "Environment.h"
 using namespace MyMath;
 
 enum Shading{
@@ -25,6 +26,7 @@ private:
 	const TriangleMesh* _parent;
 	Vector3f _normal;
 	int _v1,_v2,_v3;
+	Color color;
 public:
 
     Triangle(int v1, int v2, int v3, const TriangleMesh* parent) {
@@ -33,10 +35,12 @@ public:
         _v3 = v3;
         _parent = parent;
         computeNormal();
+        computeColor();
     }
 
     void computeNormal();
     void computeColor();
+    const Color getColor() const {return color;}
 };
 
 
@@ -65,8 +69,8 @@ public:
 		v3 = _v[_trig[i]._v3];
 	}
 
+	const Triangle getTriangle(int i) const { return _trig[i]; }
 	Vector3f getVertex(int i) const {return _v[i];}
-
 	const vector <Vector3f> * getVertices() const { return &_v;}
 };
 

@@ -14,10 +14,13 @@ void Triangle::computeNormal() {
 	v3 -= v1;
 
 	_normal = Vector3f::crossProduct(v2, v3);
+	_normal.normalize();
 }
 
 void Triangle::computeColor() {
-
+	float scale = Vector3f::dotProduct(_normal, Environment::light);
+	scale += Environment::globalLightingConstant;
+	this->color = Color(scale);
 }
 
 void TriangleMesh::loadFile(char * filename)

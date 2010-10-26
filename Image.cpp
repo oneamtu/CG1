@@ -76,13 +76,14 @@ void Image::projectVertices(const vector<Vector3f> * vertices) {
 void Image::projectTriangleMesh(TriangleMesh trig) {
 
 	for (int i = 0; i < trig.trigNum(); i++ ) {
+		Color c = trig.getTriangle(i).getColor();
 		Vector3f v1, v2, v3;
 		trig.getTriangleVertices(i, v1, v2, v3);
 		vector<Vector2i> pixels = projectTriangleIntoPixels(v1, v2, v3);
 		for (vector<Vector2i>::iterator j = pixels.begin(); j
 				!= pixels.end(); j++) {
 			if (this->containsPoint(*j)) {
-				this->addPixel((*j), Color(255,255,0));
+				this->addPixel((*j), c);
 			}
 		}
 	}
@@ -112,7 +113,9 @@ void Image::output(const char * filename) {
     f<<width<<" "<<height<<endl;
     f<<255<<endl;
     for (int i = 0; i < height*width; i++) {
-        f<<(int)_image[i].red<<' '<<(int)_image[i].green<<' '<<(int)_image[i].blue<<' ';
+        f<<(int)_image[i].getRed()<<' '
+        		<<(int)_image[i].getGreen()<<' '
+        		<<(int)_image[i].getBlue()<<' ';
         if ((i-1)%width == 0) {
             f<<endl;
         }

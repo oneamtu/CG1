@@ -12,6 +12,6 @@
 
 using namespace std;
 
-typedef char byte;
+typedef unsigned char byte;
 
 #endif /* COMMON_H_ */

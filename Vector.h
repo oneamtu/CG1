@@ -13,6 +13,7 @@
 #include <assert.h>
 #include <iostream>
 #include <fstream>
+#include <math.h>
 
 #include "Common.h"
 
@@ -76,6 +77,7 @@ public:
 	const T getElementAt(int i) const {
 		return _item[i];
 	}
+
 };
 
 /*
@@ -95,10 +97,27 @@ public:
 	Vector3f() : Vector(){
 	}
 
-	static Vector3f crossProduct(Vector v1, Vector3f v2) {
+	float length() const {
+		return sqrt(_item[0]*_item[0] +
+				_item[1]*_item[1] +
+				_item[2]*_item[2]);
+	}
+
+	void normalize(){
+		float l = length();
+		_item[0] = _item[0]/l;
+		_item[1] = _item[1]/l;
+		_item[2] = _item[2]/l;
+	}
+
+	static Vector3f crossProduct(Vector3f v1, Vector3f v2) {
 		return Vector3f(v1[1]*v2[2]-v1[2]*v2[1],
 				v1[2]*v2[0]-v1[0]*v2[2],
 				v1[0]*v2[1]-v1[1]*v2[0]);
+	}
+
+	static float dotProduct(Vector3f v1, Vector3f v2) {
+		return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
 	}
 
 };
