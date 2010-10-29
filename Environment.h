@@ -8,6 +8,7 @@ namespace Environment {
 	static const float globalLightingConstant = 0.2f;
 
 
+
 }
 
 

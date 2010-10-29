@@ -13,10 +13,11 @@
 
 Vector2f Image::projectVertexOntoPlane(Vector3f v) {
 
-    float _ratio = focalLength / v[Z];
-    float _x = _ratio * v[X];
-    float _y = _ratio * v[Y];
-    return Vector2f(_x, _y);
+    //float _ratio = _camera->getFocalLength() / v[Z];
+    //float _x = _ratio * v[X];
+    //float _y = _ratio * v[Y];
+	Vector3f _v = _camera->project(v);
+    return Vector2f(_v[X], _v[Y]);
 }
 
 

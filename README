@@ -5,4 +5,6 @@ Author: Octavian Neamtu
 
 For the projection and rasterization part I have followed this tutorial posted on DevMaster.net:
 http://www.devmaster.net/articles/software-rendering/part1.php
-The article also releases source code through which I have looked but have not copied. 
+The article also releases source code through which I have looked but have not copied.
+
+http://www.lighthouse3d.com/opengl/viewfrustum/index.php?gaplanes

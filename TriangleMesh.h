@@ -14,9 +14,10 @@ class Triangle;
 using namespace MyMath;
 
 enum Shading{
-	FLAT = 0,
-	GOURAUD = 1,
-	PHONG = 2
+	NONE = 0,
+	FLAT = 1,
+	GOURAUD = 2,
+	PHONG =32
 };
 
 class Triangle {

@@ -47,12 +47,18 @@ public:
 		}
 	}
 
-	Vector & operator =(const Vector & obj) {
-			for (int i = 0; i < N; i++) {
-				_item[i] = obj.getElementAt(i);
-			}
-			return *this;
+	Vector(const Vector &obj) {
+		for (int i = 0; i < N; i++) {
+			_item[i] = obj.getElementAt(i);
 		}
+	}
+
+	Vector & operator =(const Vector & obj) {
+		for (int i = 0; i < N; i++) {
+			_item[i] = obj.getElementAt(i);
+		}
+		return *this;
+	}
 
 	Vector & operator +=(const Vector & obj) {
 		for (int i = 0; i < N; i++) {
@@ -75,6 +81,10 @@ public:
 	}
 
 	const T getElementAt(int i) const {
+		return _item[i];
+	}
+
+	const T get(int i) const {
 		return _item[i];
 	}
 

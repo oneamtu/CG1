@@ -19,20 +19,24 @@ class Image;
 #include "Math.h"
 #include "Vector.h"
 #include "TriangleMesh.h"
+#include "Camera.h"
 
 using namespace MyMath;
 
 class Image {
 
+private:
+	const Camera* _camera;
+
 public:
 
     const static int height = 640;
     const static int width = 640;
-    const static float upp = 2.0f/width;//units per pixel
-    const static float fov = 0.524f;
 
 public:
-    Image() : focalLength(1.0f / tan(fov/2)) {}
+    Image(const Camera* c) {
+    	this->_camera = c;
+    }
 
     Vector2f projectVertexOntoPlane(const Vector3f v);
     Vector2i projectVertexIntoPixel(const Vector3f v);
