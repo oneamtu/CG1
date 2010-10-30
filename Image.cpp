@@ -11,24 +11,24 @@
 #include "MyMath.h"
 
 
-Vector2f Image::projectVertexOntoPlane(Vector3f v) {
+Vector3f Image::projectVertexIntoViewVolume(Vector3f v) {
 
     //float _ratio = _camera->getFocalLength() / v[Z];
     //float _x = _ratio * v[X];
     //float _y = _ratio * v[Y];
 	Vector3f _v = _camera->project(v);
-    return Vector2f(_v[X], _v[Y]);
+//	cout<<_v[Z]<<endl;
+    return _v;
 }
 
 
 Vector2i Image::projectVertexIntoPixel(Vector3f v) {
 
-    Vector2f _vf = projectVertexOntoPlane(v);
-
-    return convertFromProjectionPlaneToImage(_vf);
+    return convertFromViewVolumeToImage(
+    		projectVertexIntoViewVolume(v));
 }
 
-Vector2i Image::convertFromProjectionPlaneToImage(Vector2f v) {
+Vector2i Image::convertFromViewVolumeToImage(Vector3f v) {
 	int _x = (int) (v[X] * width);
 	int _y = (int) (v[Y] * height);
 
@@ -47,6 +47,10 @@ vector<Vector2i> Image::projectTriangleIntoPixels(
 
 	vector <Vector2i> _pixels;
 
+	Vector3f vv1 = projectVertexIntoViewVolume(v1);
+	Vector3f vv2 = projectVertexIntoViewVolume(v1);
+	Vector3f vv3 = projectVertexIntoViewVolume(v1);
+
 	Vector2i pv1 = projectVertexIntoPixel(v1);
 	Vector2i pv2 = projectVertexIntoPixel(v2);
 	Vector2i pv3 = projectVertexIntoPixel(v3);
@@ -54,9 +58,13 @@ vector<Vector2i> Image::projectTriangleIntoPixels(
 
 	for (int i = t.leftBound(); i < t.rightBound(); i++) {
 		for (int j = t.bottomBound(); j < t.topBound(); j++) {
-			Vector2i point = Vector2i(i, j);
-			if (t.contains(point)) {
-				_pixels.push_back(point);
+			Vector2i _p = Vector2i(i, j);
+			if (t.contains(_p) && this->containsPoint(_p)) {
+				float _z = -t.interpolate(_p, vv1[Z], vv2[Z], vv3[Z]);
+				if (_z < _zBuffer[_p[X] + height * _p[Y]]) {
+					_zBuffer[_p[X] + height * _p[Y]] = _z;
+					_pixels.push_back(_p);
+				}
 			}
 		}
 	}
@@ -77,15 +85,14 @@ void Image::projectVertices(const vector<Vector3f> * vertices) {
 void Image::projectTriangleMesh(TriangleMesh trig) {
 
 	for (int i = 0; i < trig.trigNum(); i++ ) {
+		//cout<<"projecting "<<i<<endl;
 		Color c = trig.getTriangle(i).getColor();
 		Vector3f v1, v2, v3;
 		trig.getTriangleVertices(i, v1, v2, v3);
 		vector<Vector2i> pixels = projectTriangleIntoPixels(v1, v2, v3);
 		for (vector<Vector2i>::iterator j = pixels.begin(); j
 				!= pixels.end(); j++) {
-			if (this->containsPoint(*j)) {
-				this->addPixel((*j), c);
-			}
+			this->addPixel((*j), c);
 		}
 	}
 }

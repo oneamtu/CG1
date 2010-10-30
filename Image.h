@@ -25,43 +25,44 @@ using namespace MyMath;
 
 class Image {
 
-private:
-	const Camera* _camera;
-
 public:
+    const static int height = 400;
+    const static int width = 400;
+    const static float Z_BUFFER_MAX = 10000.0f;
 
-    const static int height = 640;
-    const static int width = 640;
+private:
+    Color _image[height * width];
+    float _zBuffer[height * width];
+	const Camera* _camera;
 
 public:
     Image(const Camera* c) {
     	this->_camera = c;
+    	resetZBuffer();
     }
 
-    Vector2f projectVertexOntoPlane(const Vector3f v);
+    Vector3f projectVertexIntoViewVolume(const Vector3f v);
     Vector2i projectVertexIntoPixel(const Vector3f v);
     vector<Vector2i> projectTriangleIntoPixels(
     		Vector3f v1, Vector3f v2, Vector3f v3);
-    Vector2i convertFromProjectionPlaneToImage(Vector2f v);
+    Vector2i convertFromViewVolumeToImage(Vector3f v);
     void projectVertices(const vector<Vector3f> * vertices);
     void projectTriangleMesh(TriangleMesh trig);
+
     bool containsPoint(Vector2i p);
     void addPixel(Vector2i p, Color c);
 
     void output(const char * filename);
 
-    const Color* getImageArray() const;
+    void resetZBuffer() {
+    	for (int i = 0; i < width * height; i++)
+    		_zBuffer[i] = Z_BUFFER_MAX;
+    }
 
-
-private:
-    Color _image[height * width];
-    float focalLength;
+    const Color* getImageArray() const {
+    	return _image;
+    }
 
 };
-
-/*
- * Image getters
- */
-inline const Color* Image::getImageArray() const { return _image; }
 
 #endif /* IMAGE_H_ */

@@ -42,7 +42,9 @@ public:
 
 	bool contains(Vector2i p);
 
-	Vector3f getBarycentricCoordinatesForPoint(Vector2i p);
+	Vector3f getBarycentricCoordinates(Vector2i p);
+
+	float interpolate(Vector2i p, float f1, float f2, float f3);
 
 	int topBound() {
 		return MyMath::max(v1[Y], v2[Y], v3[Y]);

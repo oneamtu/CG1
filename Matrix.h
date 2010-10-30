@@ -45,8 +45,8 @@ public:
 		m.set(1, 1, 2*n/(t-b));
 		m.set(0, 2, (r+l)/(r-l));
 		m.set(1, 2, (t+b)/(t-b));
-		m.set(2, 2, (f+n)/(n-f));
-		m.set(2, 3, (2*f*n)/(n-f));
+		m.set(2, 2, (-1)*(f+n)/(f-n));
+		m.set(2, 3, ((-2)*f*n)/(f-n));
 		m.set(3, 2, -1);
 		return m;
 	}

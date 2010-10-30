@@ -11,9 +11,9 @@ int main(int argc, char **argv)
 {
 	if (argc >  1)  {
 		trig.loadFile(argv[1]);
-		Camera cam(0.78f, Vector3f(0.0f, 0.0f, 900.0f));
+		Camera cam(0.78f, Vector3f(0.0f, 0.0f, 800.0f));
 		Image i(&cam);
-		trig.translate(Vector3f(0.0f, 0.0f, 900.0f));
+		trig.translate(Vector3f(0.0f, 0.0f, -800.0f));
 		cout<<"Projecting vertices ..."<<endl;
 		i.projectTriangleMesh(trig);
 		//i.projectVertices(trig.getVertices());

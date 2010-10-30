@@ -9,7 +9,7 @@ void Triangle2Di::computeBarycentricConstants() {
 
 
 
-Vector3f Triangle2Di::getBarycentricCoordinatesForPoint(Vector2i p){
+Vector3f Triangle2Di::getBarycentricCoordinates(Vector2i p){
 	float _alpha, _beta, _gamma;
 
 	if ((f_231 == 0.0f) && (f_312 == 0.0f) && (f_123 == 0.0f)) {
@@ -18,7 +18,7 @@ Vector3f Triangle2Di::getBarycentricCoordinatesForPoint(Vector2i p){
 
 	_alpha = auxBarycentricFunction(v2, v3, p) / f_231;
 	_beta = auxBarycentricFunction(v3, v1, p) / f_312;
-	_gamma = auxBarycentricFunction(v2, v3, p) / f_123;
+	_gamma = auxBarycentricFunction(v1, v2, p) / f_123;
 
 	return Vector3f(_alpha, _beta, _gamma);
 }
@@ -37,7 +37,7 @@ float Triangle2Di::auxBarycentricFunction(Vector2i va, Vector2i vb, Vector2i v) 
 
 bool Triangle2Di::contains(Vector2i p) {
 
-	Vector3f _bar = getBarycentricCoordinatesForPoint(p);
+	Vector3f _bar = getBarycentricCoordinates(p);
 	if ((_bar[0] >= 0.0f && _bar[0] <= 1.0f ) &&
 			(_bar[1] >= 0.0f && _bar[1] <= 1.0f ) &&
 			(_bar[2] >= 0.0f && _bar[2] <= 1.0f ))
@@ -45,3 +45,8 @@ bool Triangle2Di::contains(Vector2i p) {
 	return false;
 }
 
+float Triangle2Di::interpolate(
+		Vector2i p, float f1, float f2, float f3) {
+	Vector3f c = getBarycentricCoordinates(p);
+	return (c[0] * f1 + c[1] * f2 + c[2] * f3);
+}
