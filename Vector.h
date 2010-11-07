@@ -85,6 +85,7 @@ public:
 	}
 
 	const T get(int i) const {
+		assert (i < N);
 		return _item[i];
 	}
 

@@ -9,29 +9,27 @@ private:
 	Vector3f _location;
 	//RotationMatrix _m;
 	Matrix4f _perspectiveToParallel;
-	float _far, _near; //clipping distances
-	float _left, _right, _top, _bottom; //view frustum near plane bounds
+	float _far; //clipping distances
 	float _focalLength;
 	float _fov;
 	float _width;//width of the projection screen
 
 public:
 	static const float DEFAULT_WIDTH = 2.0f;
-	static const float DEFAULT_FAR = 2000.0f;
+	static const float DEFAULT_FAR = 1000.0f;
 	Camera(float fov, Vector3f l) :
-		_fov(fov), _focalLength(1.0f / tan(_fov/2)),
-		_near(_focalLength), _far(DEFAULT_FAR),
-		_width(DEFAULT_WIDTH),
-		_top(_width/2), _right(_width/2),
-		_bottom(-_width/2), _left(-_width/2){
+		_fov(fov), _focalLength(1.0f / tan(fov/2)),
+		_far(DEFAULT_FAR),
+		_width(DEFAULT_WIDTH) {
 		_perspectiveToParallel =
 				Matrix4f::perspectiveToParallelTranform(
-						_right, _left, _top, _bottom, _near, _far);
+						_width/2, -_width/2, _width/2, -_width/2,
+						_focalLength, _far);
 		_location = l;
 	}
 
 	float getFocalLength() const {return _focalLength;}
-	Vector3f project(Vector3f p) const {
+	Vector3f project(const Vector3f *p) const {
 		return Matrix4f::prod(_perspectiveToParallel, p);
 	}
 };

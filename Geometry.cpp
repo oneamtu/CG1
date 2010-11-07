@@ -50,3 +50,13 @@ float Triangle2Di::interpolate(
 	Vector3f c = getBarycentricCoordinates(p);
 	return (c[0] * f1 + c[1] * f2 + c[2] * f3);
 }
+
+Color Triangle2Di::interpolate(
+		Vector2i p, Color c1, Color c2, Color c3) {
+	Vector3f c = getBarycentricCoordinates(p);
+	int r = (int) (c[0] * c1.getRed() + c[1] * c2.getRed() + c[2] * c3.getRed());
+	int g = (int) (c[0] * c1.getGreen() + c[1] * c2.getGreen() + c[2] * c3.getGreen());
+	int b = (int) (c[0] * c1.getBlue() + c[1] * c2.getBlue() + c[2] * c3.getBlue());
+	return Color((byte) r, (byte) g, (byte) b);
+}
+

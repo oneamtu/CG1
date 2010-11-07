@@ -11,26 +11,33 @@
 #include "MyMath.h"
 
 
-Vector3f Image::projectVertexIntoViewVolume(Vector3f v) {
+Vector3f Image::projectVertexIntoViewVolume(const Vector3f *v) {
 
-    //float _ratio = _camera->getFocalLength() / v[Z];
-    //float _x = _ratio * v[X];
-    //float _y = _ratio * v[Y];
-	Vector3f _v = _camera->project(v);
-//	cout<<_v[Z]<<endl;
-    return _v;
+	float n = _camera->getFocalLength();
+	float f = 80.0f;
+    float _ratio = -_camera->getFocalLength() / v->get(Z);
+    float _x = _ratio * v->get(X);
+    float _y = _ratio * v->get(Y);
+    float _z = f/(f-n)* (-v->get(Z)) - f*n/(f-n);
+    //cout<<_ratio<<" "<<_x<<endl;
+    return Vector3f(_x, _y, _z);
+//	Vector3f _v = _camera->project(v);
+//    return _v;
 }
 
 
-Vector2i Image::projectVertexIntoPixel(Vector3f v) {
+Vector2i Image::projectVertexIntoPixel(const Vector3f *v) {
 
-    return convertFromViewVolumeToImage(
-    		projectVertexIntoViewVolume(v));
+	Vector3f pv = projectVertexIntoViewVolume(v);
+    return convertFromViewVolumeToImage(&pv);
 }
 
-Vector2i Image::convertFromViewVolumeToImage(Vector3f v) {
-	int _x = (int) (v[X] * width);
-	int _y = (int) (v[Y] * height);
+Vector2i Image::convertFromViewVolumeToImage(const Vector3f *v) {
+//	if ( v->get(X) < 0 || v->get(X) > 1 ||
+//			v->get(Y) < 0 || v->get(Y) > 1)
+//	cout<< v->get(X) << " " << v->get(Y)<<endl;
+	int _x = (int) (v->get(X) * width/2);
+	int _y = (int) (v->get(Y) * height/2);
 
 	_x += (int) (width/2);
 	_y += (int) (height/2);
@@ -39,31 +46,54 @@ Vector2i Image::convertFromViewVolumeToImage(Vector3f v) {
 	//in the image in points down
 	_y = height - _y;
 
+	//cout<< _x << " " << _y <<endl;
+
 	return Vector2i(_x, _y);
 }
 
 vector<Vector2i> Image::projectTriangleIntoPixels(
-		Vector3f v1, Vector3f v2, Vector3f v3) {
+		const Triangle *t, Shading shading) {
 
 	vector <Vector2i> _pixels;
 
+	const vector<const Vertex *> v = t->getVertices();
+	const Vector3f *v1, *v2, *v3;
+	v1 = v[0]->getVector();
+	v2 = v[1]->getVector();
+	v3 = v[2]->getVector();
+
 	Vector3f vv1 = projectVertexIntoViewVolume(v1);
-	Vector3f vv2 = projectVertexIntoViewVolume(v1);
-	Vector3f vv3 = projectVertexIntoViewVolume(v1);
+	Vector3f vv2 = projectVertexIntoViewVolume(v2);
+	Vector3f vv3 = projectVertexIntoViewVolume(v3);
 
 	Vector2i pv1 = projectVertexIntoPixel(v1);
 	Vector2i pv2 = projectVertexIntoPixel(v2);
 	Vector2i pv3 = projectVertexIntoPixel(v3);
-	Triangle2Di t(pv1, pv2, pv3);
+	Triangle2Di t2d(pv1, pv2, pv3);
 
-	for (int i = t.leftBound(); i < t.rightBound(); i++) {
-		for (int j = t.bottomBound(); j < t.topBound(); j++) {
+	for (int i = t2d.leftBound(); i < t2d.rightBound(); i++) {
+		for (int j = t2d.bottomBound(); j < t2d.topBound(); j++) {
 			Vector2i _p = Vector2i(i, j);
-			if (t.contains(_p) && this->containsPoint(_p)) {
-				float _z = -t.interpolate(_p, vv1[Z], vv2[Z], vv3[Z]);
+			if (t2d.contains(_p) && this->containsPoint(_p)) {
+				//z-buffering
+				float _z = t2d.interpolate(_p, vv1[Z], vv2[Z], vv3[Z]);
 				if (_z < _zBuffer[_p[X] + height * _p[Y]]) {
 					_zBuffer[_p[X] + height * _p[Y]] = _z;
-					_pixels.push_back(_p);
+					switch (shading) {
+					case NONE:
+						this->addPixel(_p, TriangleMesh::DEFAULT_COLOR);
+						break;
+					case FLAT:
+						this->addPixel(_p, t->getColor());
+						break;
+					case GOURAUD:
+						this->addPixel(_p, t2d.interpolate(_p,
+								v[0]->getColor(), v[1]->getColor(), v[2]->getColor()));
+						break;
+					default:
+						this->addPixel(_p, TriangleMesh::DEFAULT_COLOR);
+						break;
+					}
 				}
 			}
 		}
@@ -71,29 +101,23 @@ vector<Vector2i> Image::projectTriangleIntoPixels(
 	return _pixels;
 }
 
-void Image::projectVertices(const vector<Vector3f> * vertices) {
+void Image::projectVertices(const vector<Vertex> * vertices) {
 
-   for (vector<Vector3f>::const_iterator i = vertices->begin();
+   for (vector<Vertex>::const_iterator i = vertices->begin();
            i != vertices->end(); i++) {
-       Vector2i p = projectVertexIntoPixel(*i);
+       Vector2i p = projectVertexIntoPixel(&(*i->getVector()));
        if (this->containsPoint(p)) {
     	   addPixel(p, Color(255,255,255));
        }
    }
 }
 
-void Image::projectTriangleMesh(TriangleMesh trig) {
+void Image::projectTriangleMesh(const TriangleMesh *triangleMesh) {
 
-	for (int i = 0; i < trig.trigNum(); i++ ) {
-		//cout<<"projecting "<<i<<endl;
-		Color c = trig.getTriangle(i).getColor();
-		Vector3f v1, v2, v3;
-		trig.getTriangleVertices(i, v1, v2, v3);
-		vector<Vector2i> pixels = projectTriangleIntoPixels(v1, v2, v3);
-		for (vector<Vector2i>::iterator j = pixels.begin(); j
-				!= pixels.end(); j++) {
-			this->addPixel((*j), c);
-		}
+	for (int i = 0; i < triangleMesh->trigNum(); i++ ) {
+		projectTriangleIntoPixels(
+				triangleMesh->getTriangle(i),
+				triangleMesh->getShading());
 	}
 }
 

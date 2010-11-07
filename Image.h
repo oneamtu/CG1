@@ -41,13 +41,13 @@ public:
     	resetZBuffer();
     }
 
-    Vector3f projectVertexIntoViewVolume(const Vector3f v);
-    Vector2i projectVertexIntoPixel(const Vector3f v);
+    Vector3f projectVertexIntoViewVolume(const Vector3f* v);
+    Vector2i projectVertexIntoPixel(const Vector3f* v);
     vector<Vector2i> projectTriangleIntoPixels(
-    		Vector3f v1, Vector3f v2, Vector3f v3);
-    Vector2i convertFromViewVolumeToImage(Vector3f v);
-    void projectVertices(const vector<Vector3f> * vertices);
-    void projectTriangleMesh(TriangleMesh trig);
+    		const Triangle* t, Shading shading);
+    Vector2i convertFromViewVolumeToImage(const Vector3f* v);
+    void projectVertices(const vector<Vertex> * vertices);
+    void projectTriangleMesh(const TriangleMesh* trig);
 
     bool containsPoint(Vector2i p);
     void addPixel(Vector2i p, Color c);

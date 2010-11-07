@@ -5,22 +5,78 @@ using namespace std;
 #include <string.h>
 #include "TriangleMesh.h"
 
+const Color TriangleMesh::DEFAULT_COLOR(255, 255, 0);
+
 void Triangle::computeNormal() {
-	Vector3f v1 = _parent->getVertex(_v1);
-	Vector3f v2 = _parent->getVertex(_v2);
-	Vector3f v3 = _parent->getVertex(_v3);
 
-	v2 -= v1;
-	v3 -= v1;
+	Vector3f va = *_v2->getVector();
+	va -= *_v1->getVector();
+	Vector3f vb = *_v3->getVector();
+	vb -= *_v1->getVector();
 
-	_normal = Vector3f::crossProduct(v2, v3);
+	_normal = Vector3f::crossProduct(va, vb);
 	_normal.normalize();
 }
 
 void Triangle::computeColor() {
 	float scale = Vector3f::dotProduct(_normal, Environment::light);
 	scale += Environment::globalLightingConstant;
-	this->color = Color(scale);
+	this->_color = Color(scale);
+}
+
+void Vertex::computeNormal() {
+	for (vector<int>::const_iterator i = _triangles.begin();
+			i < _triangles.end(); i++) {
+		_normal += _parent->getTriangle(*i)->getNormal();
+	}
+	_normal.normalize();
+}
+
+void Vertex::computeColor() {
+	float scale = Vector3f::dotProduct(_normal, Environment::light);
+	scale += Environment::globalLightingConstant;
+	this->_color = Color(scale);
+}
+
+void TriangleMesh::update() {
+	switch (_shading) {
+	case NONE: break;
+	case FLAT:
+		computeTriangleNormals();
+		computeTriangleColors();
+		break;
+	case GOURAUD:
+		computeTriangleNormals();
+		computeVertexNormals();
+		computeVertexColors();
+		break;
+	case PHONG:
+		break;
+	default: break;	}
+}
+
+void TriangleMesh::computeTriangleNormals() {
+	for (int i = 0; i < _trig.size(); i++ ) {
+		_trig[i].computeNormal();
+	}
+}
+
+void TriangleMesh::computeTriangleColors() {
+	for (int i = 0; i < _trig.size(); i++ ) {
+		_trig[i].computeColor();
+	}
+}
+
+void TriangleMesh::computeVertexNormals() {
+	for (int i = 0; i < _v.size(); i++) {
+		_v[i].computeNormal();
+	}
+}
+
+void TriangleMesh::computeVertexColors() {
+	for (int i = 0; i < _v.size(); i++) {
+		_v[i].computeColor();
+	}
 }
 
 void TriangleMesh::loadFile(char * filename)
@@ -50,11 +106,7 @@ void TriangleMesh::loadFile(char * filename)
 		    if (strcmp(header, "v") == 0) {
 			sscanf(buf, "%s %f %f %f", header, &x, &y, &z);
 
-		//	x *= 1000; y *= 1000; z *= 1000;
-
-			_v.push_back(Vector3f(x,y,z));
-
-
+			_v.push_back(Vertex(Vector3f(x,y,z), this));
 			av[0] += x; av[1] += y; av[2] += z;
 
 			if (x > xmax) xmax = x;
@@ -68,9 +120,11 @@ void TriangleMesh::loadFile(char * filename)
 		    else if (strcmp(header, "f") == 0) {
 			sscanf(buf, "%s %d %d %d", header, &v1, &v2, &v3);
 
-			Triangle trig(v1-1, v2-1, v3-1, this);
+			Triangle trig(&_v[v1-1], &_v[v2-1], &_v[v3-1], this);
 			_trig.push_back(trig);
-
+			_v.at(v1-1)._triangles.push_back(_trig.size()-1);
+			_v.at(v2-1)._triangles.push_back(_trig.size()-1);
+			_v.at(v3-1)._triangles.push_back(_trig.size()-1);
 		    }
  	}
 
@@ -83,17 +137,17 @@ void TriangleMesh::loadFile(char * filename)
 
 	for (int j = 0; j < 3; j++) av[j] /= _v.size();
 
-	for (int i = 0; i < _v.size(); i++)
-	{
-		for (int j = 0; j < 3; j++) _v[i][j] = (_v[i][j]-av[j])/range*400;
-	}
+//	for (int i = 0; i < _v.size(); i++)
+//	{
+//		for (int j = 0; j < 3; j++) _v[i][j] = (_v[i][j]-av[j])/range*400;
+//	}
 	cout << "Trig " << _trig.size() << " vertices " << _v.size() << endl;
 	f.close();
 }
 
 void TriangleMesh::translate(Vector3f translation) {
-	for (vector<Vector3f>::iterator i = _v.begin();
+	for (vector<Vertex>::iterator i = _v.begin();
 	           i != _v.end(); i++) {
-		*i += translation;
+		i->_vector += translation;
 	}
 }
