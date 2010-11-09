@@ -60,3 +60,12 @@ Color Triangle2Di::interpolate(
 	return Color((byte) r, (byte) g, (byte) b);
 }
 
+Vector3f Triangle2Di::interpolate(Vector2i p,
+		const Vector3f* v1, const Vector3f* v2, const Vector3f* v3) {
+	Vector3f c = getBarycentricCoordinates(p);
+	float x = c[0] * v1->get(0) + c[1] * v2->get(0) + c[2] * v3->get(0);
+	float y = c[0] * v1->get(1) + c[1] * v2->get(1) + c[2] * v3->get(1);
+	float z = c[0] * v1->get(2) + c[1] * v2->get(2) + c[2] * v3->get(2);
+	return Vector3f(x, y, z);
+}
+

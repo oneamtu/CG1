@@ -69,6 +69,7 @@ public:
 	void computeColor();
 	const Vector3f* getVector() const { return &_vector;}
 	const Color getColor() const {return _color;}
+	const Vector3f* getNormal() const { return &_normal;}
 
 };
 
@@ -85,7 +86,7 @@ public:
 	const static Color DEFAULT_COLOR;
 
 public:
-	TriangleMesh(char *filename) : _shading(GOURAUD){ loadFile(filename);}
+	TriangleMesh(char *filename) : _shading(PHONG){ loadFile(filename);}
 	TriangleMesh() {}
 
 	void loadFile(char *filename);

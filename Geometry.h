@@ -47,6 +47,8 @@ public:
 
 	float interpolate(Vector2i p, float f1, float f2, float f3);
 	Color interpolate(Vector2i p, Color c1, Color c2, Color c3);
+	Vector3f interpolate(Vector2i p,
+			const Vector3f* v1, const Vector3f* v2, const Vector3f* v3);
 
 	int topBound() {
 		return MyMath::max(v1[Y], v2[Y], v3[Y]);

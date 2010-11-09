@@ -55,6 +55,7 @@ vector<Vector2i> Image::projectTriangleIntoPixels(
 		const Triangle *t, Shading shading) {
 
 	vector <Vector2i> _pixels;
+	Vector3f n;
 
 	const vector<const Vertex *> v = t->getVertices();
 	const Vector3f *v1, *v2, *v3;
@@ -89,6 +90,13 @@ vector<Vector2i> Image::projectTriangleIntoPixels(
 					case GOURAUD:
 						this->addPixel(_p, t2d.interpolate(_p,
 								v[0]->getColor(), v[1]->getColor(), v[2]->getColor()));
+						break;
+					case PHONG:
+						n = t2d.interpolate(_p,
+								v[0]->getNormal(), v[1]->getNormal(), v[2]->getNormal());
+						n.normalize();
+						this->addPixel(_p, Color(Vector3f::dotProduct(n, Environment::light)
+						+ Environment::globalLightingConstant));
 						break;
 					default:
 						this->addPixel(_p, TriangleMesh::DEFAULT_COLOR);
