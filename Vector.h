@@ -17,8 +17,6 @@
 
 #include "Common.h"
 
-class Vector3f;
-
 /*
  * class Vector
  *
@@ -99,13 +97,13 @@ class Vector3f : public Vector<float, 3> {
 
 public:
 
-	Vector3f(float x, float y, float z) : Vector(){
+	Vector3f(float x, float y, float z){
 		_item[0] = x;
 		_item[1] = y;
 		_item[2] = z;
 	}
 
-	Vector3f() : Vector(){
+	Vector3f(){
 	}
 
 	float length() const {
@@ -137,12 +135,12 @@ class Vector2f : public Vector<float, 2> {
 
 public:
 
-	Vector2f(float x, float y) : Vector(){
+	Vector2f(float x, float y){
 		_item[0] = x;
 		_item[1] = y;
 	}
 
-	Vector2f() : Vector() {
+	Vector2f(){
 	}
 };
 
@@ -150,12 +148,12 @@ class Vector2i : public Vector<int, 2> {
 
 public:
 
-	Vector2i(int x, int y) : Vector(){
+	Vector2i(int x, int y){
 		_item[0] = x;
 		_item[1] = y;
 	}
 
-	Vector2i() : Vector() {
+	Vector2i(){
 	}
 
 	int getX() const { return _item[0]; }

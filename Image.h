@@ -16,7 +16,7 @@ class Image;
 
 #include "Color.h"
 #include "Geometry.h"
-#include "Math.h"
+//#include "Math.h"
 #include "Vector.h"
 #include "TriangleMesh.h"
 #include "Camera.h"
