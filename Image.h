@@ -64,6 +64,12 @@ public:
     	return _image;
     }
 
+    void clear() {
+      for (int i = 0; i < height*width; i++)
+	_image[i] = Color();
+      resetZBuffer();
+    }
+
 };
 
 #endif /* IMAGE_H_ */

@@ -120,6 +120,8 @@ public:
 	const vector<const Vertex*> getTriangleVertices(int i) {
 		return _trig[i].getVertices();
 	}
+
+	void setShading(Shading s) {_shading = s;}
 };
 
 #endif //_TRIANGLEMESH_DEFINED

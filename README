@@ -16,3 +16,16 @@ http://www.cs.caltech.edu/courses/cs171/barycentric.pdf
 as suggested in the practical description.
 
 I used the lecture notes and Wikipedia (occasionally) to figure out the shading and the z-buffer stuff.
+
+I do pretty naive perspective projection based on proportions in similar triangles.
+
+Code roadmap:
+
+Image class - contains the image buffer, the z-buffer and is where all the projection/shading happens
+TriangleMesh class - stores the object and updates all the normal and color computation
+Vertex, Triangle classes - unit classes for the TriangleMesh, have methods for normal and color computation
+Triangle2d class - represents an integer coordinate triangle and implements barycentric coordinate computation, interpolation and can check if an integer point is inside a triangle or not (used for rasterization)
+Camera class - stores data about camera (fov, location)
+Vector class - implements vector calculation (e.g. cross product, addition, etc.)
+Matrix class - implements matrix - vector multiplication
+Auxilliary files - that do small auxilliary stuff

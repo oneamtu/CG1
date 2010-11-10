@@ -13,13 +13,30 @@ int main(int argc, char **argv)
 		Image i(&cam);
 		trig.translate(cam.getLocation());
 		trig.update();
-		cout<<"Projecting vertices ..."<<endl;
-		i.projectTriangleMesh(&trig);
-		//i.projectVertices(trig.getVertices());
-		cout<<"Creating ppm file ..."<<endl;
-		i.output("image.ppm");
-		//i.clear();
 
+		cout<<"No shading ..."<<endl;
+		trig.setShading(NONE);
+		i.projectTriangleMesh(&trig);
+		i.output("image.ppm");
+		i.clear();
+
+		cout<<"Flat shading ..."<<endl;
+		trig.setShading(FLAT);
+		i.projectTriangleMesh(&trig);
+		i.output("image_flat.ppm");
+		i.clear();
+
+		cout<<"Gouraud shading ..."<<endl;
+		trig.setShading(GOURAUD);
+		i.projectTriangleMesh(&trig);
+		i.output("image_gouraud.ppm");
+		i.clear();
+
+		cout<<"Phong shading ..."<<endl;
+		trig.setShading(PHONG);
+		i.projectTriangleMesh(&trig);
+		i.output("image_phong.ppm");
+		i.clear();
 	}
 	else {
 		cerr << argv[0] << " <filename> " << endl;

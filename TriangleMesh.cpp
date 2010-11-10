@@ -36,7 +36,7 @@ void Vertex::computeNormal() {
 
 void Vertex::computeColor() {
 	float scale = Vector3f::dotProduct(_normal, Environment::light);
-	//scale += Environment::globalLightingConstant;
+	scale += Environment::globalLightingConstant;
 	this->_color = Color(scale);
 }
 

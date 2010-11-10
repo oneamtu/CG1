@@ -5,7 +5,7 @@
 namespace Environment {
 
 	static const Vector3f light(0.0f, 0.0f, 1.0f);
-	static const float globalLightingConstant = 0.2f;
+	static const float globalLightingConstant = 0.02f;
 
 
 
