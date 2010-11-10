@@ -23,12 +23,13 @@ public:
 		_width(DEFAULT_WIDTH) {
 		_perspectiveToParallel =
 				Matrix4f::perspectiveToParallelTranform(
-						_width/2, -_width/2, _width/2, -_width/2,
 						_focalLength, _far);
 		_location = l;
 	}
 
 	float getFocalLength() const {return _focalLength;}
+	const Vector3f* getLocation() const {return &_location;}
+        //not used
 	Vector3f project(const Vector3f *p) const {
 		return Matrix4f::prod(_perspectiveToParallel, p);
 	}

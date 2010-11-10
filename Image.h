@@ -1,6 +1,8 @@
 /*
  * Image.h
- *
+ * 
+ * where all the projection magic happens
+ * 
  *  Created on: Sep 30, 2010
  *      Author: oneamtu
  */
@@ -16,7 +18,6 @@ class Image;
 
 #include "Color.h"
 #include "Geometry.h"
-//#include "Math.h"
 #include "Vector.h"
 #include "TriangleMesh.h"
 #include "Camera.h"
@@ -58,7 +59,7 @@ public:
     	for (int i = 0; i < width * height; i++)
     		_zBuffer[i] = Z_BUFFER_MAX;
     }
-
+    //getters
     const Color* getImageArray() const {
     	return _image;
     }

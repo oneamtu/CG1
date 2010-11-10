@@ -37,14 +37,12 @@ public:
 		z = z/w;
 		return Vector3f(x, y, z);
 	}
-
-	static Matrix4f perspectiveToParallelTranform(float r,
-			float l, float t, float b, float n, float f) {
+	//not used
+        //implemented after lecture notes
+	static Matrix4f perspectiveToParallelTranform(float n, float f) {
 		Matrix4f m;
 		m.set(0, 0, n);
 		m.set(1, 1, n);
-		//m.set(0, 2, (r+l)/(r-l));
-		//m.set(1, 2, (t+b)/(t-b));
 		m.set(2, 2, f/(f-n));
 		m.set(2, 3, (-f*n)/(f-n));
 		m.set(3, 2, -1);

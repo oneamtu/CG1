@@ -13,29 +13,33 @@
 
 Vector3f Image::projectVertexIntoViewVolume(const Vector3f *v) {
 
-	float n = _camera->getFocalLength();
-	float f = 80.0f;
+    float n = _camera->getFocalLength();
+    float f = 80.0f;
+
+    //perspective projection
+    //transformation for z from lecture notes
+    //this is faster and simpler than the matrix form
+    //but the matrix form would be better if using
+    //hardware pipes
     float _ratio = -_camera->getFocalLength() / v->get(Z);
     float _x = _ratio * v->get(X);
     float _y = _ratio * v->get(Y);
     float _z = f/(f-n)* (-v->get(Z)) - f*n/(f-n);
-    //cout<<_ratio<<" "<<_x<<endl;
+    
     return Vector3f(_x, _y, _z);
-//	Vector3f _v = _camera->project(v);
+//    Vector3f _v = _camera->project(v);
 //    return _v;
 }
 
 
 Vector2i Image::projectVertexIntoPixel(const Vector3f *v) {
 
-	Vector3f pv = projectVertexIntoViewVolume(v);
+    Vector3f pv = projectVertexIntoViewVolume(v);
     return convertFromViewVolumeToImage(&pv);
 }
 
 Vector2i Image::convertFromViewVolumeToImage(const Vector3f *v) {
-//	if ( v->get(X) < 0 || v->get(X) > 1 ||
-//			v->get(Y) < 0 || v->get(Y) > 1)
-//	cout<< v->get(X) << " " << v->get(Y)<<endl;
+
 	int _x = (int) (v->get(X) * width/2);
 	int _y = (int) (v->get(Y) * height/2);
 
@@ -45,8 +49,6 @@ Vector2i Image::convertFromViewVolumeToImage(const Vector3f *v) {
 	//we flip the y because in the world system the y axis points up
 	//in the image in points down
 	_y = height - _y;
-
-	//cout<< _x << " " << _y <<endl;
 
 	return Vector2i(_x, _y);
 }
@@ -80,18 +82,23 @@ vector<Vector2i> Image::projectTriangleIntoPixels(
 				float _z = t2d.interpolate(_p, vv1[Z], vv2[Z], vv3[Z]);
 				if (_z < _zBuffer[_p[X] + height * _p[Y]]) {
 					_zBuffer[_p[X] + height * _p[Y]] = _z;
+					//shading
 					switch (shading) {
 					case NONE:
+					  //use default color
 						this->addPixel(_p, TriangleMesh::DEFAULT_COLOR);
 						break;
 					case FLAT:
+					  //use color of triangle
 						this->addPixel(_p, t->getColor());
 						break;
 					case GOURAUD:
+					  //interpolate color of vertices
 						this->addPixel(_p, t2d.interpolate(_p,
 								v[0]->getColor(), v[1]->getColor(), v[2]->getColor()));
 						break;
 					case PHONG:
+					  //interpolate normals and compute color
 						n = t2d.interpolate(_p,
 								v[0]->getNormal(), v[1]->getNormal(), v[2]->getNormal());
 						n.normalize();
@@ -109,6 +116,8 @@ vector<Vector2i> Image::projectTriangleIntoPixels(
 	return _pixels;
 }
 
+//projects a bunch of vertices on the screen
+//useful for debugging
 void Image::projectVertices(const vector<Vertex> * vertices) {
 
    for (vector<Vertex>::const_iterator i = vertices->begin();

@@ -1,3 +1,11 @@
+/*
+ * @author oneamtu
+ *
+ * Contains an integer coordinate Triangle
+ * with some common geometric functions integrated
+ * 
+ */
+
 #ifndef _GEOMETRY_H
 #define _GEOMETRY_H
 
@@ -12,17 +20,6 @@
 
 enum Axis {
     X = 0, Y = 1, Z = 2
-};
-
-class Rectangle2Di {
-
-	Vector2i tl, tr, br, bl;
-
-public:
-	Rectangle2Di(int t, int r, int b, int l) :
-		tl(t, l), tr(t, r), bl(b, l), br(b, r) {
-	}
-
 };
 
 class Triangle2Di {
@@ -64,11 +61,6 @@ public:
 
 	int leftBound() {
 		return MyMath::min(v1[X], v2[X], v3[X]);
-	}
-
-	Rectangle2Di getBoundingBox() {
-		return Rectangle2Di(topBound(), rightBound(),
-				bottomBound(), leftBound());
 	}
 };
 

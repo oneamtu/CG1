@@ -4,6 +4,8 @@
 #include "Common.h"
 #include <iostream>
 
+//simple class that holds byte values for
+//red, green and blue
 class Color {
 private:
 	byte red, green, blue;

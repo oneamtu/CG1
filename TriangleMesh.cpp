@@ -1,4 +1,4 @@
-
+#
 using namespace std;
 #include <iostream>
 #include <fstream>
@@ -7,6 +7,7 @@ using namespace std;
 
 const Color TriangleMesh::DEFAULT_COLOR(255, 255, 0);
 
+//Triangle
 void Triangle::computeNormal() {
 
 	Vector3f va = *_v2->getVector();
@@ -24,6 +25,7 @@ void Triangle::computeColor() {
 	this->_color = Color(scale);
 }
 
+//Vertex
 void Vertex::computeNormal() {
 	for (vector<int>::const_iterator i = _triangles.begin();
 			i < _triangles.end(); i++) {
@@ -38,23 +40,12 @@ void Vertex::computeColor() {
 	this->_color = Color(scale);
 }
 
+//TriangleMesh
 void TriangleMesh::update() {
-	switch (_shading) {
-	case NONE: break;
-	case FLAT:
-		computeTriangleNormals();
-		computeTriangleColors();
-		break;
-	case GOURAUD:
-		computeTriangleNormals();
-		computeVertexNormals();
-		computeVertexColors();
-		break;
-	case PHONG:
-		computeTriangleNormals();
-		computeVertexNormals();
-		break;
-	default: break;	}
+	computeTriangleNormals();
+	computeTriangleColors();
+	computeVertexNormals();
+	computeVertexColors();
 }
 
 void TriangleMesh::computeTriangleNormals() {
@@ -81,6 +72,7 @@ void TriangleMesh::computeVertexColors() {
 	}
 }
 
+//function to read in a trianglemesh from a file
 void TriangleMesh::loadFile(char * filename)
 {
 	ifstream f(filename);
@@ -137,19 +129,13 @@ void TriangleMesh::loadFile(char * filename)
 	if (xmax-xmin > ymax-ymin) range = xmax-xmin;
 	else range = ymax-ymin;
 
-	for (int j = 0; j < 3; j++) av[j] /= _v.size();
-
-//	for (int i = 0; i < _v.size(); i++)
-//	{
-//		for (int j = 0; j < 3; j++) _v[i][j] = (_v[i][j]-av[j])/range*400;
-//	}
 	cout << "Trig " << _trig.size() << " vertices " << _v.size() << endl;
 	f.close();
 }
 
-void TriangleMesh::translate(Vector3f translation) {
+void TriangleMesh::translate(const Vector3f* translation) {
 	for (vector<Vertex>::iterator i = _v.begin();
 	           i != _v.end(); i++) {
-		i->_vector += translation;
+		i->_vector += *translation;
 	}
 }

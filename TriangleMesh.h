@@ -21,6 +21,9 @@ enum Shading{
 	PHONG =3
 };
 
+//unit class of a TriangleMesh
+//holds pointers to its vertices and
+//the normal and color of the polygon
 class Triangle {
 friend class TriangleMesh;
 
@@ -39,6 +42,8 @@ public:
 
     void computeNormal();
     void computeColor();
+
+    //getters
     const Color getColor() const {return _color;}
     const Vector3f getNormal() const {return _normal;}
     const vector<const Vertex*> getVertices() const {
@@ -51,6 +56,10 @@ public:
 
 };
 
+//unit class of TriangleMesh
+//holds a 3d vector of its position 
+//also the interpolated normal of its polygons
+//and computed color
 class Vertex {
 friend class TriangleMesh;
 private:
@@ -67,13 +76,15 @@ public:
 
 	void computeNormal();
 	void computeColor();
+
+        //getters
 	const Vector3f* getVector() const { return &_vector;}
 	const Color getColor() const {return _color;}
 	const Vector3f* getNormal() const { return &_normal;}
 
 };
 
-
+//holds all the vertices and triangles
 class TriangleMesh {
 
 private:
@@ -93,13 +104,15 @@ public:
 
 	int trigNum() const { return _trig.size() ;}
 
-	void translate(Vector3f translation);
+	void translate(const Vector3f* translation);
 	void update();
+
 	void computeTriangleNormals();
 	void computeTriangleColors();
 	void computeVertexNormals();
 	void computeVertexColors();
 
+        //getters and setters
 	const Triangle* getTriangle(int i) const { return &_trig[i]; }
 	const Vertex* getVertex(int i) const {return &_v[i];}
 	const vector <Vertex> * getVertices() const { return &_v;}

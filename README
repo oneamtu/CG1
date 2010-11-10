@@ -2,9 +2,17 @@ Computer Graphics Practical I
 University of Edinburgh
 Author: Octavian Neamtu
 
+I have succesfully implemented:
+* perspective projection
+* object translation
+* z-buffering
+* triangle rasterization (with barycentric coordinates)
+* flat shading
+* Gouraud shading
+* Phong shading
 
-For the projection and rasterization part I have followed this tutorial posted on DevMaster.net:
-http://www.devmaster.net/articles/software-rendering/part1.php
-The article also releases source code through which I have looked but have not copied.
+For the barycentric coordinate calculations I followed the guide at:
+http://www.cs.caltech.edu/courses/cs171/barycentric.pdf
+as suggested in the practical description.
 
-http://www.codeguru.com/cpp/misc/misc/math/article.php/c10123__3/Deriving-Projection-Matrices.htm
+I used the lecture notes and Wikipedia (occasionally) to figure out the shading and the z-buffer stuff.
