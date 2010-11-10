@@ -2,6 +2,9 @@ Computer Graphics Practical I
 University of Edinburgh
 Author: Octavian Neamtu
 
+To compile do:
+>$ make
+
 I have succesfully implemented:
 * perspective projection
 * object translation
